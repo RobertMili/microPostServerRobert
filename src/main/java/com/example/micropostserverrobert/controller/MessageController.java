@@ -30,6 +30,7 @@ public class MessageController {
     @PostMapping("/posts")
     public ResponseEntity<Message> createMessage(@Valid @RequestBody Message message) {
         Message savedMessage = repository.save(message);
+
         return ResponseEntity.status(HttpStatus.CREATED).body(repository.save(message));
     }
 
@@ -41,6 +42,8 @@ public class MessageController {
     }
 
 
+
+    //TODO: Add a GET endpoint to retrieve all messages
     @GetMapping("/posts")
     public Message getMessage(  ) {
 
