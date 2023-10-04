@@ -3,6 +3,11 @@ package com.example.micropostserverrobert.controller;
 
 import com.example.micropostserverrobert.model.Message;
 import com.example.micropostserverrobert.repository.MessageRepository;
+import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -14,7 +19,8 @@ import java.time.LocalDateTime;
 
 public class MessageController {
 
-    private final com.example.micropostserverrobert.repository.MessageRepository repository;
+   @Autowired
+   private final MessageRepository repository;
 
 
     public MessageController(MessageRepository repository) {
@@ -22,10 +28,19 @@ public class MessageController {
     }
 
     @PostMapping("/posts")
-    public Message createMessage(@RequestBody Message message) {
-        message.setDataAndTime(LocalDateTime.now().toString());
-        return repository.save(message);
+    public ResponseEntity<Message> createMessage(@Valid @RequestBody Message message) {
+        Message savedMessage = repository.save(message);
+        return ResponseEntity.status(HttpStatus.CREATED).body(repository.save(message));
     }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(org.springframework.web.bind.MethodArgumentNotValidException.class)
+    public ResponseEntity<String> handleValidationExceptions(
+            org.springframework.web.bind.MethodArgumentNotValidException ex) {
+        return new ResponseEntity<>("Not valid due to validation error: " + ex.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
+
     @GetMapping("/posts")
     public Message getMessage(  ) {
 

@@ -4,6 +4,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Lob;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.Id;
@@ -31,7 +32,10 @@ public class Message {
     private Long id;
 
     @Lob
+    @NotBlank(message = "From user is required")
     private String fromUser;
+
+    @NotBlank(message = "To user is required")
     private String toUserName;
     private String message;
     private String dataAndTime;
