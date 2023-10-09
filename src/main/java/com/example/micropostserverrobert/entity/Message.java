@@ -1,4 +1,4 @@
-package com.example.micropostserverrobert.model;
+package com.example.micropostserverrobert.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

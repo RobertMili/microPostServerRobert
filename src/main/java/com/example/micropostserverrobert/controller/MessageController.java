@@ -1,16 +1,18 @@
 package com.example.micropostserverrobert.controller;
 
 
-import com.example.micropostserverrobert.model.Message;
+import com.example.micropostserverrobert.entity.Message;
 import com.example.micropostserverrobert.repository.MessageRepository;
+import com.example.micropostserverrobert.service.MessageService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 
 
 @RestController
@@ -19,12 +21,14 @@ import java.time.LocalDateTime;
 
 public class MessageController {
 
-   @Autowired
-   private final MessageRepository repository;
+    @Autowired
+    private final MessageRepository repository;
+    private final MessageService messageService;
 
 
-    public MessageController(MessageRepository repository) {
+    public MessageController(MessageRepository repository, MessageService messageService) {
         this.repository = repository;
+        this.messageService = messageService;
     }
 
     @PostMapping("/posts")
@@ -42,14 +46,18 @@ public class MessageController {
     }
 
 
+//    @GetMapping("/posts")
+//    public
 
-    //TODO: Add a GET endpoint to retrieve all messages
-    @GetMapping("/posts")
-    public Message getMessage(  ) {
-
-        Message message = new Message();
-        message.setDataAndTime(LocalDateTime.now().toString());
-        return message;
+    @GetMapping("/posts/{id}")
+    public ResponseEntity<Optional<Message>> getMessage( @PathVariable(value = "id") Long id) {
+        Optional<Message> fromTo = repository.findById(id);
+        if (fromTo.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok().body(fromTo);
     }
 
+
 }
+
