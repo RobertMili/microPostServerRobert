@@ -59,4 +59,7 @@ public class Message {
     public Long getId() {
         return id;
     }
+
+    public void setDateAndTime(String string) {
+    }
 }
