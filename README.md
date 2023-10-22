@@ -8,7 +8,7 @@ POST:
 
 /posts
 
-Except Json in the format;
+* Except Json in the format;
 {
 	"id": 2,
 	"fromUser": "asd",
