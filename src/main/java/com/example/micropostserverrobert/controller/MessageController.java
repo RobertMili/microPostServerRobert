@@ -2,6 +2,7 @@ package com.example.micropostserverrobert.controller;
 
 
 import com.example.micropostserverrobert.entity.Message;
+import com.example.micropostserverrobert.rabbitMQ.publisher.RabbitMQJsonProducer;
 import com.example.micropostserverrobert.rabbitMQ.publisher.RabbitMQProducer;
 import com.example.micropostserverrobert.repository.MessageRepository;
 import com.example.micropostserverrobert.service.MessageService;
@@ -37,26 +38,14 @@ public class MessageController {
     private final MessageRepository repository;
     private final MessageService messageService;
 
-    private final RabbitMQProducer producer;
+    private final RabbitMQJsonProducer jsonProducer;
 
-//    @Autowired
-//    private final RabbitConnection rabbitMQConsumer;
-
-
-    public MessageController(MessageRepository repository, MessageService messageService, RabbitMQProducer producer) {
+    public MessageController(MessageRepository repository, MessageService messageService, RabbitMQJsonProducer jsonProducer) {
         this.repository = repository;
         this.messageService = messageService;
-        this.producer = producer;
+        this.jsonProducer = jsonProducer;
     }
 
-
-    //RabbitMQ
-    @GetMapping("/publish")
-    public ResponseEntity<String> sendMessage(@RequestParam("message")String message){
-        producer.sendMessage(message);
-        return ResponseEntity.ok("Message sent to the RabbitMQ Successfully");
-
-    }
     @PostMapping("/posts")
     public ResponseEntity<Message> createMessage(@Valid @RequestBody Message message) {
         message.setDateAndTime(java.time.LocalDateTime.now().toString());
@@ -65,10 +54,7 @@ public class MessageController {
             message.setDataAndTime(java.time.LocalDateTime.now().toString());
         }
         Message savedMessage = repository.save(message);
-//        rabbitMQConsumer.publishMessage( message.getMessage());
-
-
-
+        jsonProducer.sendJsonMessage(savedMessage);
         return ResponseEntity.status(HttpStatus.CREATED).body(repository.save(message));
     }
 

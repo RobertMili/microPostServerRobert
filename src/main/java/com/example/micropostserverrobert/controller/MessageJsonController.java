@@ -10,13 +10,13 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1")
+@CrossOrigin
 public class MessageJsonController {
 
     @Autowired
@@ -35,6 +35,21 @@ public class MessageJsonController {
 //    }
 
 
+//    @GetMapping("/publish")
+//    public ResponseEntity<String> sendMessage(@RequestParam("message")String message){
+//        jsonProducer.sendJsonMessage(message);
+//        return ResponseEntity.ok("Message sent to the RabbitMQ Successfully");
+//
+//    }
+
+    @GetMapping("/posts/{id}")
+    public ResponseEntity<Optional<Message>> getMessage(@PathVariable(value = "id") Long id) {
+        Optional<Message> fromTo = repository.findById(id);
+        if (fromTo.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok().body(fromTo);
+    }
     @PostMapping("/posts")
     public ResponseEntity<Message> createMessage(@Valid @RequestBody Message message) {
         message.setDateAndTime(java.time.LocalDateTime.now().toString());

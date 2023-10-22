@@ -25,8 +25,12 @@ public class RabbitMQJsonProducer {
         this.rabbitTemplate = rabbitTemplate;
     }
 
-    public void sendJsonMessage(Message user){
-        LOGGER.info(String.format("Json message sent -> %s", user.toString()));
-        rabbitTemplate.convertAndSend(exchange, routingJsonKey, user);
+    public void sendJsonMessage(Message message){
+        LOGGER.info(String.format("Json message sent -> %s", message.toString()));
+        rabbitTemplate.convertAndSend(exchange, routingJsonKey, message);
+    }
+    public void getMessage(Message message){
+        LOGGER.info(String.format("Json message sent -> %s", message.toString()));
+        rabbitTemplate.convertAndSend(exchange, routingJsonKey, message);
     }
 }
