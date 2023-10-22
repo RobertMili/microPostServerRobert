@@ -6,10 +6,13 @@ Service to handle messages. Saves to Mysql and using RabbitMQ.
 Endpoints:
 POST:
 
-/posts
+---
+**POST:**
 
-* Except Json in the format;
-{
+*/posts*
+
+- Except Json in the format;   
+ {
 	"id": 2,
 	"fromUser": "asd",
 	"toUserName": "martin",
@@ -17,13 +20,19 @@ POST:
 	"dataAndTime": "2023-10-22T16:17:14.273310099"
 }
 
-GET:
-/health_check
+
+---
+
+**GET:**
+
+*/health_check*  
 returns 200 to check if server is up
 
-/posts/"id"
+*/posts/"id"*
+*  Header must include sender userID 
+* Return a Json if the requested id:
 
-Return a Json if the requested id:
+* {  
 {
 	"id": 2,
 	"fromUser": "asd",
@@ -31,6 +40,5 @@ Return a Json if the requested id:
 	"message": "This is a message",
 	"dataAndTime": "2023-10-22T16:17:14.273310099"
 }
-
 
 
