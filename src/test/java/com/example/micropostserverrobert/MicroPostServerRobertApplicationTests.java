@@ -3,6 +3,7 @@ package com.example.micropostserverrobert;
 
 import com.example.micropostserverrobert.entity.Message;
 import com.example.micropostserverrobert.repository.MessageRepository;
+import io.restassured.RestAssured;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -23,12 +24,17 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.text.IsEmptyString.emptyString;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.when;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import io.restassured.response.Response;
 
 @SpringBootTest
 class MicroPostServerRobertApplicationTests {
@@ -57,12 +63,14 @@ class MicroPostServerRobertApplicationTests {
         message1.setFromUser("fromUser");
         message1.setToUserName("toUserName");
         message1.setMessage("message");
+        message1.setDataAndTime("dataAndTime");
 
-        when(messageRepository.findById(1L)).thenReturn(Optional.of(message1));
+
+       when(messageRepository.findById(1L)).thenReturn(Optional.of(message1));
 
         mockMvc.perform(get("/posts/1")
                         .contentType(MediaType.APPLICATION_JSON))
-                        .andExpect(status().isOk());
+                .andExpect(status().isOk());
 
     }
 
@@ -72,7 +80,7 @@ class MicroPostServerRobertApplicationTests {
         mockMvc.perform(get("/posts/2"))
                 .andExpect(status().isNotFound());
     }
-}
 
+}
 
 
