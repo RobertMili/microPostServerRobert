@@ -11,7 +11,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.example.micropostserverrobert.rabbitMQ.RabbitConnection;
+
+import com.example.micropostserverrobert.rabbitMQ.publisher.RabbitMQProducer;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 
 
@@ -33,17 +39,14 @@ public class MessageController {
 
     private final RabbitMQProducer producer;
 
-    @Autowired
-    private final RabbitConnection rabbitMQConsumer;
+//    @Autowired
+//    private final RabbitConnection rabbitMQConsumer;
 
 
-
-
-    public MessageController(MessageRepository repository, MessageService messageService, RabbitMQProducer producer, RabbitConnection rabbitMQConsumer) {
+    public MessageController(MessageRepository repository, MessageService messageService, RabbitMQProducer producer) {
         this.repository = repository;
         this.messageService = messageService;
         this.producer = producer;
-        this.rabbitMQConsumer = rabbitMQConsumer;
     }
 
 
@@ -62,7 +65,8 @@ public class MessageController {
             message.setDataAndTime(java.time.LocalDateTime.now().toString());
         }
         Message savedMessage = repository.save(message);
-        rabbitMQConsumer.publishMessage( message.getMessage());
+//        rabbitMQConsumer.publishMessage( message.getMessage());
+
 
 
         return ResponseEntity.status(HttpStatus.CREATED).body(repository.save(message));
@@ -84,6 +88,9 @@ public class MessageController {
         }
         return ResponseEntity.ok().body(fromTo);
     }
+
+
+
 
 
 }
