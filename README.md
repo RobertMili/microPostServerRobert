@@ -36,14 +36,13 @@ Except Json in the format:
 
 **GET:**
 
-*/health_check*  
-returns 200 to check if server is up
+*health_check* and returns 200 to check if server is up.
 
-*/posts/"id"*
-*  Header must include sender userID 
+*  Header must include sender userID
 * Return a Json if the requested id:
 
 
+*/posts/"id"*
   
 {
 
